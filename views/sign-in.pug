@@ -1,0 +1,13 @@
+doctype html
+html
+	head
+		title #{title}
+		include layouts/header.pug
+	body
+		h1 Вход
+		form(action="login" method="POST")
+			input(placeholder="Ваш логин, сир" type="text" name="login")
+			br
+			input(placeholder="Пароль" type="password" name="password")
+			br
+			button(type="submit" name="do-login") Войти

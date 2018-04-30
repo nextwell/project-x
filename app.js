@@ -1,7 +1,8 @@
 let express    = require('express'),
 	requireFu  = require('require-fu'),
 	session    = require('express-session'),
-	bodyParser = require('body-parser');
+	bodyParser = require('body-parser'),
+	pug        = require('pug');
 
 
 let cfg    = require('./config.js'),
@@ -9,6 +10,13 @@ let cfg    = require('./config.js'),
 	
 
 // ** Views пока HTML
+
+
+//----------------------------------------------------------------------------------------
+// Mongo DB Settings
+
+let db = require('./database/utils/DataBaseUtils.js');
+db.setUpConnection();
 
 //----------------------------------------------------------------------------------------
 // Express Settings
@@ -21,6 +29,8 @@ let sessionMiddleware = session({
 
 let app = express();
 
+app.set('view engine', 'pug');
+
 app.use( bodyParser.json() );      
 app.use( bodyParser.urlencoded({     
   extended: true
@@ -31,7 +41,7 @@ app.use(sessionMiddleware);
 
 app.use(express.static('public_files'));	// Public access
 
-requireFu(__dirname + '/routes')(app);
+requireFu(__dirname + '/routes')(app, db);
 
 app.listen(cfg['PORT'], () => {
     Logger.write({source: "Express", action: "INFO", text:`Express server running on port ${cfg['PORT']}!`});
